@@ -11,7 +11,7 @@ export class FearthGdkAndroid extends FearthGdkNative {
     private readonly InitializeFuncName = "initialize";
     private readonly InitializeFuncSignature = "(Ljava/lang/String;)V";
     private readonly CreateWalletFuncName = "createWallet";
-    private readonly CreateWalletFuncSignature = "(Ljava/lang/String;)Ljava/lang/String;";
+    private readonly CreateWalletFuncSignature = "()Ljava/lang/String;";
 
     protected initializeNative(config: FearthGdkConfig): void {
         native.reflection.callStaticMethod(

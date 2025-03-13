@@ -1,0 +1,50 @@
+import java.util.Properties
+
+// Function to load .env from the same directory as build.gradle
+def loadEnv() {
+    def envFile = file(".env")
+    def properties = new Properties()
+    if (envFile.exists()) {
+        envFile.withInputStream { properties.load(it) }
+    }
+    return properties
+}
+
+// Function to get environment variables (first from .env, then system)
+def getEnv(String key) {
+    def env = loadEnv() // Load env inside function to ensure access
+    return env.getProperty(key) ?: System.getenv(key)
+}
+
+buildscript {
+
+    repositories {
+        google()
+        mavenCentral()
+        // jcenter() // keeped as anchor, will be removed soon
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.0.2'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url "https://maven.pkg.github.com/trustwallet/wallet-core"
+            credentials {
+                username = getEnv("GITHUB_USERNAME") ?: ""
+                password = getEnv("GITHUB_TOKEN") ?: ""
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
